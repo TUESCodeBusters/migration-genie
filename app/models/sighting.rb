@@ -1,7 +1,7 @@
 class Sighting < ApplicationRecord
-    alias_attribute :user, :reporter
-
-    belongs_to :reporter
+    belongs_to :user
     has_one :location
     has_one :species
+
+    mount_uploader :photo, SightingPhotoUploader
 end
