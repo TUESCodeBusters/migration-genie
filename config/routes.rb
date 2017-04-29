@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :species
   get 'home/index'
 
   devise_for :users, path: 'auth', path_names: {

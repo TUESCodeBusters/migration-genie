@@ -1,0 +1,17 @@
+<%= form_for(sighting) do |f| %>
+  <% if sighting.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(sighting.errors.count, "error") %> prohibited this sighting from being saved:</h2>
+
+      <ul>
+      <% sighting.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
