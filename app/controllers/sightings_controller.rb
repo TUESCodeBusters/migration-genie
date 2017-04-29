@@ -1,3 +1,6 @@
+require 'google/cloud/vision'
+require_relative '../assets/settings/animal_names'
+
 class SightingsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_sighting, only: [:show, :edit, :update, :destroy]
@@ -72,5 +75,22 @@ class SightingsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def sighting_params
       params.require(:sighting).permit(:reporter, :photo)
+    end
+
+    def take_animal_name_from_photo(image)
+      # Your Google Cloud Platform project ID
+      project_id = "420862347889-nuebrnckmge77dcrce8pff0i2k9ek3rb.apps.googleusercontent.com"
+
+      # Instantiates a client
+      vision = Google::Cloud::Vision.new project: project_id
+
+      # Performs label detection on the image file
+      parsed_data = vision.image(image).labels
+
+      parsed_data.each do |animal|
+        if ANIMAL_NAMES.include?(animal.description.downcase)
+          return animal.description.downcase
+        end
+      end
     end
 end
