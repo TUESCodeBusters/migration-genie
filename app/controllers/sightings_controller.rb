@@ -9,7 +9,6 @@ class SightingsController < ApplicationController
   # GET /sightings
   # GET /sightings.json
   def index
-    take_animal_name_from_photo('https://storage.googleapis.com/migration-genie-photos/c4413d7f-ebd6-4a8c-bcec-9750d94545bc.png')
     @sightings = Sighting.all
   end
 
@@ -30,21 +29,16 @@ class SightingsController < ApplicationController
   # POST /sightings
   # POST /sightings.json
   def create
-    p '=========================='
-    p sighting_params
     @sighting = Sighting.new(sighting_params)
-    p @sighting
     respond_to do |format|
       if @sighting.save
         format.html { redirect_to @sighting, notice: 'Sighting was successfully created.' }
         format.json { render :show, status: :created, location: @sighting }
       else
-        p '----------------------------------'
         format.html { render :new }
         format.json { render json: @sighting.errors, status: :unprocessable_entity }
       end
     end
-    p '============================'
   end
 
   # PATCH/PUT /sightings/1
@@ -84,20 +78,16 @@ class SightingsController < ApplicationController
 
     def take_animal_name_from_photo(photo)
       result = Hash.new
-      p '------------------------'
-      p photo
       begin
         image = MiniMagick::Image.open(photo)
-        p image.exif['GPSLatitude'].split(',')
+
         latitude = image.exif['GPSLatitude'].split(',')
         longtitude = image.exif['GPSLongitude'].split(',')
 
         result['latitude'] = GPS_to_latlong(latitude)
         result['longtitude'] = GPS_to_latlong(longtitude)
-        p result
       rescue Exception
       end
-      p '------------------------'
       begin
         # Your Google Cloud Platform project ID
         project_id = "420862347889-nuebrnckmge77dcrce8pff0i2k9ek3rb.apps.googleusercontent.com"
@@ -107,17 +97,14 @@ class SightingsController < ApplicationController
 
         # Performs label detection on the image file
         parsed_data = vision.image(photo).labels
-
         parsed_data.each do |animal|
           if ANIMAL_NAMES.include?(animal.description.downcase)
             result['animal_name'] = animal.description.downcase
-            p result
             return result
           end
         end
       rescue Exception
       end
-      p result
       return result
     end
 
