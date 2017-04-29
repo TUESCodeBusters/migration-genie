@@ -7,7 +7,6 @@ class SightingsController < ApplicationController
   # GET /sightings
   # GET /sightings.json
   def index
-    take_animal_name_from_photo
     @sightings = Sighting.all
   end
 
@@ -76,17 +75,16 @@ class SightingsController < ApplicationController
       params.fetch(:sighting, {})
     end
 
-    def take_animal_name_from_photo
+    def take_animal_name_from_photo(image)
       # Your Google Cloud Platform project ID
       project_id = "420862347889-nuebrnckmge77dcrce8pff0i2k9ek3rb.apps.googleusercontent.com"
 
       # Instantiates a client
       vision = Google::Cloud::Vision.new project: project_id
 
-      # The name of the image file to annotate
-      file = "/home/ivan/Desktop/test.jpg"
       # Performs label detection on the image file
-      parsed_data = vision.image(file).labels
+      parsed_data = vision.image(image).labels
+
       parsed_data.each do |animal|
         if ANIMAL_NAMES.include?(animal.description.downcase)
           return animal.description.downcase
