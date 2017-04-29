@@ -1,5 +1,6 @@
 require 'google/cloud/vision'
 require 'mini_magick'
+require 'google/cloud/storage'
 require_relative '../assets/settings/animal_names'
 
 class SightingsController < ApplicationController
@@ -30,10 +31,14 @@ class SightingsController < ApplicationController
   # POST /sightings.json
   def create
     @sighting = Sighting.new(sighting_params)
+    @sighting.user_id = current_user.id
+
     respond_to do |format|
       if @sighting.save
+        upload_photo(@sighting.photo)
         format.html { redirect_to @sighting, notice: 'Sighting was successfully created.' }
-        format.json { render :show, status: :created, location: @sighting }
+        format.json { render :show, status: 
+        :created, location: @sighting }
       else
         format.html { render :new }
         format.json { render json: @sighting.errors, status: :unprocessable_entity }
@@ -73,7 +78,7 @@ class SightingsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def sighting_params
-      params.fetch(:sighting, {})
+      params.require(:sighting).permit(:reporter, :photo)
     end
 
     def take_animal_name_from_photo(photo)
@@ -116,5 +121,19 @@ class SightingsController < ApplicationController
         lt << nums[0].to_i / nums[1].to_i
       end
       lt[0].to_f + lt[1].to_f/60 + lt[2].to_f/3600  
+    end
+
+    def upload_photo(photo)
+      project_id = "420862347889-nuebrnckmge77dcrce8pff0i2k9ek3rb.apps.googleusercontent.com"
+
+      storage = Google::Cloud::Storage.new project: project_id
+
+      bucket = storage.bucket "migration-genie-photos"
+      file = bucket.create_file "./public#{photo.url}", photo.url.split('/')[photo.url.split('/').length - 1]
+      file.acl.public!
+      
+      @sighting.photo = file.url
+      @sighting.save
+
     end
 end
