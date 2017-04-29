@@ -1,7 +1,7 @@
 class Sighting < ApplicationRecord
     alias_attribute :user, :reporter
 
-    has_one :reporter
+    belongs_to :reporter
     has_one :location
     has_one :species
 end
