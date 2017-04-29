@@ -106,7 +106,7 @@ class SightingsController < ApplicationController
       file = bucket.create_file "./public#{photo.url}", photo.url.split('/')[photo.url.split('/').length - 1]
       file.acl.public!
       
-      @sighting.photo = file.url
+      @sighting.photo_cdn = file.url
       @sighting.save
 
     end
