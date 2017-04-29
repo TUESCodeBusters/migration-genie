@@ -1,4 +1,13 @@
 Rails.application.routes.draw do
+  namespace :admin do
+    resources :users
+    resources :locations
+    resources :sightings
+    resources :species
+
+    root to: "users#index"
+  end
+
   resources :sightings
   resources :species
   get 'home/index'
