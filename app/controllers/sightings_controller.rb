@@ -1,4 +1,5 @@
 require 'google/cloud/vision'
+require 'google/cloud/storage'
 require_relative '../assets/settings/animal_names'
 
 class SightingsController < ApplicationController
@@ -33,8 +34,10 @@ class SightingsController < ApplicationController
 
     respond_to do |format|
       if @sighting.save
+        upload_photo(@sighting.photo)
         format.html { redirect_to @sighting, notice: 'Sighting was successfully created.' }
-        format.json { render :show, status: :created, location: @sighting }
+        format.json { render :show, status: 
+        :created, location: @sighting }
       else
         format.html { render :new }
         format.json { render json: @sighting.errors, status: :unprocessable_entity }
@@ -92,5 +95,19 @@ class SightingsController < ApplicationController
           return animal.description.downcase
         end
       end
+    end
+
+    def upload_photo(photo)
+      project_id = "420862347889-nuebrnckmge77dcrce8pff0i2k9ek3rb.apps.googleusercontent.com"
+
+      storage = Google::Cloud::Storage.new project: project_id
+
+      bucket = storage.bucket "migration-genie-photos"
+      file = bucket.create_file "./public#{photo.url}", photo.url.split('/')[photo.url.split('/').length - 1]
+      file.acl.public!
+      
+      @sighting.photo = file.url
+      @sighting.save
+
     end
 end
