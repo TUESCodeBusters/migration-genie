@@ -1,5 +1,5 @@
 require 'google/cloud/vision'
-require_relative 'settings/animal_names'
+require_relative '../assets/settings/animal_names'
 
 class SightingsController < ApplicationController
   before_action :set_sighting, only: [:show, :edit, :update, :destroy]
