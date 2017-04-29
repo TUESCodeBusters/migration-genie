@@ -1,3 +1,6 @@
+require 'google/cloud/vision'
+require_relative 'settings/animal_names'
+
 class SightingsController < ApplicationController
   before_action :set_sighting, only: [:show, :edit, :update, :destroy]
 
@@ -5,6 +8,7 @@ class SightingsController < ApplicationController
   # GET /sightings.json
   def index
     @sightings = Sighting.all
+    take_animal_name_from_photo
   end
 
   # GET /sightings/1
@@ -70,5 +74,28 @@ class SightingsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def sighting_params
       params.fetch(:sighting, {})
+    end
+
+    def take_animal_name_from_photo
+      # Your Google Cloud Platform project ID
+      project_id = "420862347889-nuebrnckmge77dcrce8pff0i2k9ek3rb.apps.googleusercontent.com"
+
+      # Instantiates a client
+      vision = Google::Cloud::Vision.new project: project_id
+
+      # The name of the image file to annotate
+      file = "./test.jpg"
+      
+      # Performs label detection on the image file
+      parsed_data = vision.image(file).labels
+
+      result = new Hash
+
+      parsed_data.each do |animal|
+        if ANIMAL_NAMES.include?(animal.description.downcase)
+          p animal.description.downcase
+          return animal.description.downcase
+        end
+      end
     end
 end
