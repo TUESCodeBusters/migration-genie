@@ -52,3 +52,5 @@ gem 'devise', '4.2.1'
 gem 'google-cloud-vision', '0.24.0'
 
 gem 'administrate', '0.5.0'
+
+gem 'mini_magick', '4.7.0'
