@@ -26,6 +26,7 @@ class SightingsController < ApplicationController
   # POST /sightings.json
   def create
     @sighting = Sighting.new(sighting_params)
+    @sighting.user_id = current_user.id
 
     respond_to do |format|
       if @sighting.save
@@ -70,6 +71,6 @@ class SightingsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def sighting_params
-      params.fetch(:sighting, {})
+      params.require(:sighting).permit(:reporter, :photo)
     end
 end
