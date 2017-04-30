@@ -1,3 +1,3 @@
 class Location < ApplicationRecord
-    belongs_to :sighting
+    has_one :sighting
 end

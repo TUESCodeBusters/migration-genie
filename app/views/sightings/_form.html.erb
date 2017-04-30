@@ -22,6 +22,20 @@
           </div>
         <% end %>
 
+        <%= f.fields_for :location, Location.new do |l| %>
+          <div class="form-group">
+            <%= label(:l, :lat) do %>
+              <%= l.text_field :lat, class: 'form-control form-control-lg', autofocus: true, placeholder: 'Location Latitude' %>
+            <% end %>
+          </div>
+
+          <div class="form-group">
+            <%= label(:l, :lng) do %>
+              <%= l.text_field :lng, class: 'form-control form-control-lg', autofocus: true, placeholder: 'Location Longtitude' %>
+            <% end %>
+          </div>
+        <% end %>
+
         <%= label(:sighting, :photo) do %>
           <%= f.file_field :photo, class: 'btn btn-outline-primary btn-block', accept: 'image/png,image/gif,image/jpeg' %>
         <% end %>

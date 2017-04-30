@@ -5,7 +5,12 @@ require_relative '../assets/settings/animal_names'
 
 class SightingsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_sighting, only: [:show, :edit, :update, :destroy]
+  before_action :set_sighting, except: [:get], only: [:show, :edit, :update, :destroy]
+
+  def get
+    @sightings = Sighting.all
+    render :json => @sightings
+  end
 
   # GET /sightings
   # GET /sightings.json
@@ -79,7 +84,8 @@ class SightingsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def sighting_params
-      params.require(:sighting).permit(:user, :photo, species_attributes: [:name])
+      params.require(:sighting).permit(:user, :photo, species_attributes: [:name],
+                                        location_attributes: [:lat, :lng])
     end
 
     def take_animal_name_from_photo(photo)
