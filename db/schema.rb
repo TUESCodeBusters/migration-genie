@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170429223024) do
+ActiveRecord::Schema.define(version: 20170430003850) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,6 +44,7 @@ ActiveRecord::Schema.define(version: 20170429223024) do
     t.datetime "updated_at",   null: false
     t.integer  "location_id"
     t.integer  "sightings_id"
+    t.integer  "sighting_id"
     t.index ["location_id"], name: "index_species_on_location_id", using: :btree
     t.index ["name"], name: "index_species_on_name", unique: true, using: :btree
     t.index ["sightings_id"], name: "index_species_on_sightings_id", using: :btree
