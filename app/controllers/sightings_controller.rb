@@ -40,14 +40,17 @@ class SightingsController < ApplicationController
     @sighting.user_id = current_user.id
 
     respond_to do |format|
+      upload_photo(@sighting.photo)
       if @sighting.save
-        upload_photo(@sighting.photo)
+        ActionCable.server.broadcast 'sightings',
+          sighting: @sighting
+        # head :ok
         format.html { redirect_to @sighting, notice: 'Sighting was successfully created.' }
-        format.json { render :show, status: 
-        :created, location: @sighting }
+        # format.json { render :show, status: 
+        # :created, location: @sighting }
       else
         format.html { render :new }
-        format.json { render json: @sighting.errors, status: :unprocessable_entity }
+        # format.json { render json: @sighting.errors, status: :unprocessable_entity }
       end
     end
   end
