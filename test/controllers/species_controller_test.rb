@@ -17,7 +17,7 @@ class SpeciesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create species" do
     assert_difference('Species.count') do
-      post species_index_url, params: { species: {  } }
+      post species_index_url, params: { species: { name: @species.name } }
     end
 
     assert_redirected_to species_url(Species.last)
@@ -34,7 +34,7 @@ class SpeciesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update species" do
-    patch species_url(@species), params: { species: {  } }
+    patch species_url(@species), params: { species: { name: @species.name } }
     assert_redirected_to species_url(@species)
   end
 

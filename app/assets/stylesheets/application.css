@@ -13,3 +13,11 @@
  *= require_tree .
  *= require_self
  */
+
+.custom-file-control:lang(en)::after {
+    content: "Choose file...";
+}
+
+.custom-file-control:lang(en)::before {
+    content: "Browse";
+}
