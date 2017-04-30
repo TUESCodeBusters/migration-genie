@@ -1,19 +1,35 @@
-<%= form_for(sighting) do |f| %>
-  <% if sighting.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(sighting.errors.count, "error") %> prohibited this sighting from being saved:</h2>
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 offset-md-3">
+      <%= form_for(sighting) do |f| %>
+        <% if sighting.errors.any? %>
+          <div id="error_explanation">
+            <h2><%= pluralize(sighting.errors.count, "error") %> prohibited this sighting from being saved:</h2>
 
-      <ul>
-      <% sighting.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
+            <ul>
+            <% sighting.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <%= f.fields_for :species, Species.new do |s| %>
+          <div class="form-group">
+            <%= label(:s, :name) do %>
+              <%= s.text_field :name, class: 'form-control form-control-lg', autofocus: true, placeholder: 'Species Name' %>
+            <% end %>
+          </div>
+        <% end %>
+
+        <%= label(:sighting, :photo) do %>
+          <%= f.file_field :photo, class: 'btn btn-outline-primary btn-block', accept: 'image/png,image/gif,image/jpeg' %>
+        <% end %>
+
+        <div class="actions">
+          <%= f.submit class: 'btn btn-outline-primary btn-lg btn-block' %>
+        </div>
       <% end %>
-      </ul>
     </div>
-  <% end %>
-
-  <%= f.file_field :photo %>
-
-  <div class="actions">
-    <%= f.submit %>
   </div>
-<% end %>
+</div>

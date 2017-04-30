@@ -1,6 +1,19 @@
 <p id="notice"><%= notice %></p>
 
-<p><%= @sighting.photo %></p>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6 offset-md-3" style="padding-left: 0px;  padding-right: 0px;">
+            <div class="card">
+                <img class="card-img-top img-fluid" src="<%= @sighting.photo_cdn %>" alt="Card image cap">
+                <div class="card-block">
+                    <h4 class="card-title"><%= @sighting.species.name %></h4>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <%= link_to 'Edit', edit_sighting_path(@sighting) %> |
 <%= link_to 'Back', sightings_path %>

@@ -29,6 +29,7 @@ class SightingsController < ApplicationController
   # POST /sightings
   # POST /sightings.json
   def create
+    p sighting_params
     @sighting = Sighting.new(sighting_params)
     @sighting.user_id = current_user.id
 
@@ -77,7 +78,7 @@ class SightingsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def sighting_params
-      params.require(:sighting).permit(:reporter, :photo)
+      params.require(:sighting).permit(:user, :photo, species_attributes: [:name])
     end
 
     def take_animal_name_from_photo(image)
@@ -106,7 +107,7 @@ class SightingsController < ApplicationController
       file = bucket.create_file "./public#{photo.url}", photo.url.split('/')[photo.url.split('/').length - 1]
       file.acl.public!
       
-      @sighting.photo = file.url
+      @sighting.photo_cdn = file.url
       @sighting.save
 
     end
