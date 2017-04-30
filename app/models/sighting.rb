@@ -9,9 +9,11 @@ class Sighting < ApplicationRecord
 
     def species_attributes=(attributes)
         self.species = Species.where(attributes).first_or_create
+        self.species_id = self.species.id
     end
 
     def location_attributes=(attributes)
         self.location = Location.where(attributes).first_or_create
+        self.location_id = self.location.id
     end
 end

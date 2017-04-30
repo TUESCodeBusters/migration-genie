@@ -1,5 +1,10 @@
 class LocationsController < ApplicationController
-  before_action :set_location, except: [:test], only: [:show, :edit, :update, :destroy]
+  before_action :set_location, only: [:show, :edit, :update, :destroy]
+
+  def get
+    @location = Location.find(params[:id])
+    render :json => @location
+  end
 
   # GET /locations
   # GET /locations.json

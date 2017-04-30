@@ -9,6 +9,11 @@ Rails.application.routes.draw do
   end
 
   resources :sightings
+  scope '/api' do
+    get '/sightings', to: 'sightings#get'
+    get '/locations', to: 'locations#get'
+  end
+
   resources :species
   resources :locations
   get 'home/index'

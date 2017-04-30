@@ -4,7 +4,12 @@ require_relative '../assets/settings/animal_names'
 
 class SightingsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_sighting, only: [:show, :edit, :update, :destroy]
+  before_action :set_sighting, except: [:get], only: [:show, :edit, :update, :destroy]
+
+  def get
+    @sightings = Sighting.all
+    render :json => @sightings
+  end
 
   # GET /sightings
   # GET /sightings.json
