@@ -13,9 +13,10 @@ class SightingsController < ApplicationController
   end
 
   def ai
-    p take_animal_location_from_photo(Sighting.find(params[:id]).photo_cdn)
-    p take_animal_name_from_photo(Sighting.find(params[:id]).photo_cdn)
-    render :json => take_animal_name_from_photo(Sighting.find(params[:id]).photo_cdn)
+    # p take_animal_location_from_photo(Sighting.find(params[:id]).photo_cdn)
+    # p take_animal_name_from_photo(Sighting.find(params[:id]).photo_cdn)
+    render :json => [take_animal_name_from_photo(Sighting.find(params[:id]).photo_cdn), 
+                     take_animal_location_from_photo(Sighting.find(params[:id]).photo_cdn)]
   end
 
   # GET /sightings
