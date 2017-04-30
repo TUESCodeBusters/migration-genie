@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   scope '/api' do
     get '/sightings', to: 'sightings#get'
     get '/locations', to: 'locations#get'
+    get '/species', to: 'species#get'
   end
 
   resources :species

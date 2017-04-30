@@ -1,6 +1,11 @@
 class SpeciesController < ApplicationController
   before_action :set_species, only: [:show, :edit, :update, :destroy]
 
+  def get
+    @species = Species.find(params[:id])
+    render :json => @species
+  end
+
   # GET /species
   # GET /species.json
   def index
