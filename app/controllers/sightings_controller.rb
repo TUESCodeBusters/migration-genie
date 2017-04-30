@@ -1,4 +1,5 @@
 require 'google/cloud/vision'
+require 'mini_magick'
 require 'google/cloud/storage'
 require_relative '../assets/settings/animal_names'
 
@@ -81,21 +82,46 @@ class SightingsController < ApplicationController
       params.require(:sighting).permit(:user, :photo, species_attributes: [:name])
     end
 
-    def take_animal_name_from_photo(image)
-      # Your Google Cloud Platform project ID
-      project_id = "420862347889-nuebrnckmge77dcrce8pff0i2k9ek3rb.apps.googleusercontent.com"
+    def take_animal_name_from_photo(photo)
+      result = Hash.new
+      begin
+        image = MiniMagick::Image.open(photo)
 
-      # Instantiates a client
-      vision = Google::Cloud::Vision.new project: project_id
+        latitude = image.exif['GPSLatitude'].split(',')
+        longtitude = image.exif['GPSLongitude'].split(',')
 
-      # Performs label detection on the image file
-      parsed_data = vision.image(image).labels
-
-      parsed_data.each do |animal|
-        if ANIMAL_NAMES.include?(animal.description.downcase)
-          return animal.description.downcase
-        end
+        result['latitude'] = GPS_to_latlong(latitude)
+        result['longtitude'] = GPS_to_latlong(longtitude)
+      rescue Exception
       end
+      begin
+        # Your Google Cloud Platform project ID
+        project_id = "420862347889-nuebrnckmge77dcrce8pff0i2k9ek3rb.apps.googleusercontent.com"
+
+        # Instantiates a client
+        vision = Google::Cloud::Vision.new project: project_id
+
+        # Performs label detection on the image file
+        parsed_data = vision.image(photo).labels
+        parsed_data.each do |animal|
+          if ANIMAL_NAMES.include?(animal.description.downcase)
+            result['animal_name'] = animal.description.downcase
+            return result
+          end
+        end
+      rescue Exception
+      end
+      return result
+    end
+
+
+    def GPS_to_latlong(arr)
+      lt = Array.new
+      arr.each do |i|
+        nums = i.split('/')
+        lt << nums[0].to_i / nums[1].to_i
+      end
+      lt[0].to_f + lt[1].to_f/60 + lt[2].to_f/3600  
     end
 
     def upload_photo(photo)
