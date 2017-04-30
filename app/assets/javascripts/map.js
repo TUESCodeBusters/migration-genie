@@ -1,4 +1,34 @@
 var map;  
+App.messages = App.cable.subscriptions.create('SightingsChannel', {  
+  received: function(data) {
+    console.log(data);
+    if (data.sighting.location_id !== null) {
+          $.ajax({
+            url: "/api/locations/?id=" + data.sighting.location_id,
+            async: false
+          })
+            .done(function (location) {
+
+              data.location = {};
+
+              data.location.lat = location.lat;
+              data.location.lng = location.lng;
+
+              $.ajax({
+                url: "/api/species?id=" + data.sighting.species_id,
+                async: false
+              })
+              .done(function (species) {
+                  data.species = {};
+                  data.species.name = species.name;
+
+                  add_species([data.location.lat, data.location.lng], data.species.name, data.sighting.photo_cdn);
+
+                });
+            });
+        }
+  }
+});
 function initMap() {
   navigator.geolocation.getCurrentPosition(function(location) {
     
