@@ -6,9 +6,36 @@
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <style type="text/css">
+    	a:hover {
+		    background-color: #0275d8;
+		    color: #e3f2fd;
+		}
+    </style>
   </head>
 
   <body>
+  	<nav class="navbar navbar-toggleable-md navbar-light bg-faded">
+	  <a class="navbar-brand" href="/">Migration Genie</a>
+	  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+	    <div class="navbar-nav">
+			<a class="nav-item nav-link active" href="/sightings">Sightings</a>
+			<a class="nav-item nav-link active" href="/sightings/new">New Sighting</a>
+			<a class="nav-item nav-link active" href="/species">Species</a>
+			<a class="nav-item nav-link active" href="/species/new">New Specie</a>
+			<a class="nav-item nav-link active" href="/locations">Locations</a>
+			<a class="nav-item nav-link active" href="/locations/new">New Location</a>
+	    </div>
+	    <div class='navbar-right'>
+	    	<% if current_user %>
+				<%= link_to "Sign out", destroy_user_session_path, :method => :delete, class:"nav-item nav-link active" %>
+			<% else %>
+				<a class="nav-item nav-link active" href="/auth/login">Log in</a>
+			<% end %>
+	    </div>
+	  </div>
+	</nav>
+
     <%= yield %>
   </body>
 </html>
