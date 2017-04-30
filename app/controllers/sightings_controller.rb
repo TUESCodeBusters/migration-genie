@@ -12,6 +12,12 @@ class SightingsController < ApplicationController
     render :json => @sightings
   end
 
+  def ai
+    p take_animal_location_from_photo(Sighting.find(params[:id]).photo_cdn)
+    p take_animal_name_from_photo(Sighting.find(params[:id]).photo_cdn)
+    render :json => take_animal_name_from_photo(Sighting.find(params[:id]).photo_cdn)
+  end
+
   # GET /sightings
   # GET /sightings.json
   def index
@@ -91,7 +97,7 @@ class SightingsController < ApplicationController
                                         location_attributes: [:lat, :lng])
     end
 
-    def take_animal_name_from_photo(photo)
+    def take_animal_location_from_photo(photo)
       result = Hash.new
       begin
         image = MiniMagick::Image.open(photo)
@@ -103,6 +109,11 @@ class SightingsController < ApplicationController
         result['longtitude'] = GPS_to_latlong(longtitude)
       rescue Exception
       end
+      return result
+    end
+
+    def take_animal_name_from_photo(photo)
+      result = Hash.new
       begin
         # Your Google Cloud Platform project ID
         project_id = "420862347889-nuebrnckmge77dcrce8pff0i2k9ek3rb.apps.googleusercontent.com"
@@ -112,6 +123,7 @@ class SightingsController < ApplicationController
 
         # Performs label detection on the image file
         parsed_data = vision.image(photo).labels
+
         parsed_data.each do |animal|
           if ANIMAL_NAMES.include?(animal.description.downcase)
             result['animal_name'] = animal.description.downcase
