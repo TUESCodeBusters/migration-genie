@@ -1,15 +1,16 @@
 Rails.application.routes.draw do
   namespace :admin do
     resources :users
-    resources :locations
     resources :sightings
     resources :species
+    resources :locations
 
     root to: "users#index"
   end
 
   resources :sightings
   resources :species
+  resources :locations
   get 'home/index'
 
   devise_for :users, path: 'auth', path_names: {
